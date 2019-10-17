@@ -1,0 +1,9 @@
+app:
+  zookeeper:
+    url: 127.0.0.1:2181
+
+logging:
+  level:
+    root: info
+    com.sweet: debug
+
