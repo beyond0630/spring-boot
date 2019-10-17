@@ -81,12 +81,12 @@ public class MQConstants {
 
     @Bean
     public Binding bindingTopicExchangeNews(Queue topicQueueNews, Exchange topicExchange) {
-        return BindingBuilder.bind(topicQueueNews).to(topicExchange).with("*.news").noargs();
+        return BindingBuilder.bind(topicQueueNews).to(topicExchange).with("#.news").noargs();
     }
 
     @Bean
     public Binding bindingTopicExchangeWeather(Queue topicQueueWeather, Exchange topicExchange) {
-        return BindingBuilder.bind(topicQueueWeather).to(topicExchange).with("weather.*").noargs();
+        return BindingBuilder.bind(topicQueueWeather).to(topicExchange).with("weather.#").noargs();
     }
 
 }
