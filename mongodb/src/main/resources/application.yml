@@ -1,0 +1,10 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1/sweet
+
+logging:
+  level:
+    root: info
+    org.springframework.data.mongodb.core: DEBUG
+
