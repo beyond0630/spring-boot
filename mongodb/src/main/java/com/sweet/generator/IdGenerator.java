@@ -1,9 +1,9 @@
 package com.sweet.generator;
 
 /**
- * flash-correct
+ *  mongodb
  *
- * @author Gent Liu
+ * @author lucifer
  * @date 2019/6/5 18:23
  */
 public interface IdGenerator {

@@ -14,12 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
- * flash-correct
+ *  mongodb
  *
- * @author Gent Liu
+ * @author lucifer
  * @date 2019/6/5 18:23
  */
-
 @Service
 public class SnowflakeIdGenerator implements IdGenerator {
 
