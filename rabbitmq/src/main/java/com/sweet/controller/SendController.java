@@ -5,6 +5,7 @@ import com.sweet.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,6 +69,35 @@ public class SendController {
                         .withEmail("lucifer email")
                         .build());
         LOGGER.debug("sent message to [{}] with key [{}]", MQConstants.EXCHANGE_TOPIC, key);
+        return "success";
+    }
+
+    /**
+     * 发送 MQ 消息
+     */
+    @GetMapping("header/{key}")
+    public String sendHeaderMessage(@PathVariable int key) {
+        User lucifer = User.newBuilder()
+                .withId(1)
+                .withName("lucifer")
+                .build();
+
+        MessagePostProcessor messagePostProcessor = message -> {
+            message.getMessageProperties().setContentType("application/json");
+            if (key == 1) {
+                message.getMessageProperties().setHeader("last-name", "sweet");
+                message.getMessageProperties().setHeader("first-name", "lucifer");
+            } else if (key == 2) {
+                message.getMessageProperties().setHeader("last-name", "sweet");
+            } else {
+                message.getMessageProperties().setHeader("last-name", "lucifer");
+            }
+            return message;
+        };
+
+        amqpTemplate.convertAndSend(MQConstants.EXCHANGE_HEADER, String.valueOf(key), lucifer, messagePostProcessor);
+        LOGGER.debug("sent message to [{}] with key [{}]", MQConstants.EXCHANGE_HEADER, key);
+
         return "success";
     }
 }

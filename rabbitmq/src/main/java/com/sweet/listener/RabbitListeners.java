@@ -44,4 +44,9 @@ public class RabbitListeners {
         LOGGER.debug("[{}] queue receive message: {}", MQConstants.QUEUE_TOPIC_WEATHER, user);
     }
 
+    @RabbitListener(queues = MQConstants.QUEUE_HEADER)
+    public void handlerHeader(@Payload User user) {
+        LOGGER.debug("[{}] queue receive message: {}", MQConstants.QUEUE_HEADER, user);
+    }
+
 }

@@ -1,5 +1,8 @@
 package com.sweet.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,12 +19,14 @@ public class MQConstants {
     public static final String EXCHANGE_DIRECT = "test.direct";
     public static final String EXCHANGE_FANOUT = "test.fanout";
     public static final String EXCHANGE_TOPIC = "test.topic";
+    public static final String EXCHANGE_HEADER = "test.header";
 
     public static final String QUEUE_DIRECT = "direct.queue";
     public static final String QUEUE_FANOUT_ONE = "fanout.queue.one";
     public static final String QUEUE_FANOUT_TWO = "fanout.queue.two";
     public static final String QUEUE_TOPIC_NEWS = "topic.news";
     public static final String QUEUE_TOPIC_WEATHER = "topic.weather";
+    public static final String QUEUE_HEADER = "header.queue";
 
 
     @Bean
@@ -37,6 +42,11 @@ public class MQConstants {
     @Bean
     public Exchange topicExchange() {
         return ExchangeBuilder.topicExchange(EXCHANGE_TOPIC).build();
+    }
+
+    @Bean
+    public HeadersExchange headerExchange() {
+        return ExchangeBuilder.headersExchange(EXCHANGE_HEADER).build();
     }
 
     @Bean
@@ -65,6 +75,11 @@ public class MQConstants {
     }
 
     @Bean
+    public Queue headerQueue() {
+        return QueueBuilder.durable(QUEUE_HEADER).build();
+    }
+
+    @Bean
     public Binding bindingDirectExchange(Queue directQueue, Exchange directExchange) {
         return BindingBuilder.bind(directQueue).to(directExchange).with("test").noargs();
     }
@@ -87,6 +102,14 @@ public class MQConstants {
     @Bean
     public Binding bindingTopicExchangeWeather(Queue topicQueueWeather, Exchange topicExchange) {
         return BindingBuilder.bind(topicQueueWeather).to(topicExchange).with("weather.#").noargs();
+    }
+
+    @Bean
+    public Binding bindingHeaderExchange(Queue headerQueue, HeadersExchange headerExchange) {
+        Map<String, Object> header = new HashMap<>();
+        header.put("last-name", "sweet");
+        header.put("first-name", "lucifer");
+        return BindingBuilder.bind(headerQueue).to(headerExchange).whereAny(header).match();
     }
 
 }
