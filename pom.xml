@@ -20,6 +20,7 @@
         <module>global-id</module>
         <module>mongodb</module>
         <module>rabbitmq</module>
+        <module>security</module>
         <module>zookeeper-feign</module>
     </modules>
 
