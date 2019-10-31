@@ -35,19 +35,19 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <version>${spring.cloud.openfeign}</version>
+            <version>${spring.cloud.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-zookeeper-config</artifactId>
-            <version>${zookeeper.config.version}</version>
+            <version>${zookeeper.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
-            <version>${zookeeper.discovery.version}</version>
+            <version>${zookeeper.version}</version>
         </dependency>
     </dependencies>
 
