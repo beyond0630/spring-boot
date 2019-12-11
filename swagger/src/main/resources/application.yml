@@ -1,0 +1,20 @@
+swagger:
+  title: "Swagger Demo Api"
+  description: "Swagger Demo Api"
+  version: @project.version@
+  contact:
+    name: "Lucifer"
+    email: "lucifer@126.com"
+  host: "http://localhost:8080"
+  ui-config:
+    operations-sorter: method
+  docket:
+    client:
+      title: "客户端API"
+      base-package: "com.sweet.controller.client"
+    web:
+      title: "WEB端API"
+      base-package: "com.sweet.controller.web"
+  authorization:
+    key-name: "Authorization"
+    auth-regex: "^/api/client/.*$"
