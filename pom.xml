@@ -17,6 +17,7 @@
     <modules>
         <module>distributed-lock</module>
         <module>dubbo</module>
+        <module>dynamic-datasource</module>
         <module>global-id</module>
         <module>mongodb</module>
         <module>rabbitmq</module>

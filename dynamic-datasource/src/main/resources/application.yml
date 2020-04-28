@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      master:
+        url: jdbc:mysql://localhost:3306/dynamic_database_master?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=false
+        username: root
+        password: lucifer
+      slave:
+        url: jdbc:mysql://localhost:3306/dynamic_database_slave?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=false
+        username: root
+        password: lucifer
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    root: info
+    com.sweet: debug
