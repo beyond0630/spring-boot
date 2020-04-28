@@ -6,7 +6,6 @@
         <groupId>com.sweet</groupId>
         <artifactId>spring-boot</artifactId>
         <version>1.0.0</version>
-        <relativePath/> <!-- lookup parent from com.sweet.repository -->
     </parent>
 
     <artifactId>distributed-lock</artifactId>

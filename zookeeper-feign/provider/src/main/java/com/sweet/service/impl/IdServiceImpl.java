@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class IdServiceImpl implements IdService {
 
-    private static AtomicLong instance = new AtomicLong(1);
+    private static final AtomicLong instance = new AtomicLong(1);
 
     @Override
     public long next() {
