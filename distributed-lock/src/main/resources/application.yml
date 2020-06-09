@@ -5,5 +5,5 @@ app:
 logging:
   level:
     root: info
-    com.sweet: debug
+    com.beyond: debug
 

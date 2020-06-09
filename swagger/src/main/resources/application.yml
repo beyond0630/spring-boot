@@ -11,10 +11,10 @@ swagger:
   docket:
     client:
       title: "客户端API"
-      base-package: "com.sweet.controller.client"
+      base-package: "com.beyond.controller.client"
     web:
       title: "WEB端API"
-      base-package: "com.sweet.controller.web"
+      base-package: "com.beyond.controller.web"
   authorization:
     key-name: "Authorization"
     auth-regex: "^/api/client/.*$"

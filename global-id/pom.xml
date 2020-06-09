@@ -3,9 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>dubbo-api</artifactId>
-        <groupId>com.sweet</groupId>
-        <version>1.0.0</version>
+        <groupId>com.beyond</groupId>
+        <artifactId>spring-boot</artifactId>
+        <version>2.0.0</version>
     </parent>
 
     <artifactId>global-id</artifactId>
