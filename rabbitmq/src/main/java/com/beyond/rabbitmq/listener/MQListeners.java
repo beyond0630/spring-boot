@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
  * @date 2019/10/17
  */
 @Component
-public class RabbitListeners {
+public class MQListeners {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitListeners.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MQListeners.class);
 
     @RabbitListener(queues = MQConstants.QUEUE_DIRECT)
     public void handlerDirect(@Payload User user) {
