@@ -26,6 +26,7 @@
         <module>dynamic-datasource</module>
         <module>dynamic-datasource-02</module>
         <module>global-id</module>
+        <module>kafka</module>
         <module>mongodb</module>
         <module>rabbitmq</module>
         <module>security</module>
