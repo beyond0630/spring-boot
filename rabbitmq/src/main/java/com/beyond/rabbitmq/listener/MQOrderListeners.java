@@ -1,7 +1,6 @@
 package com.beyond.rabbitmq.listener;
 
 import java.io.IOException;
-import java.util.Map;
 
 import com.beyond.rabbitmq.common.MQOrderConstants;
 import com.beyond.rabbitmq.model.Order;
@@ -24,16 +23,18 @@ public class MQOrderListeners {
 
     @RabbitListener(queues = MQOrderConstants.QUEUE_ORDER)
     public void handlerOrder(@Payload Order order, Channel channel,
-                             @Header(value = "amqp_deliveryTag") long deliveryTag) throws IOException {
+                             @Header(value = "amqp_deliveryTag") long deliveryTag,
+                             @Header(value = "amqp_receivedRoutingKey") String key) throws IOException {
         if (order.getId() % 3 == 0) {
             channel.basicNack(deliveryTag, false, false);
         }
-        LOGGER.debug("[{}] queue receive message: {}", MQOrderConstants.QUEUE_ORDER, order);
+        LOGGER.debug("[{}] queue receive message: key[{}], body[{}]", MQOrderConstants.QUEUE_ORDER, key, order);
     }
 
     @RabbitListener(queues = MQOrderConstants.QUEUE_ORDER_DEAD)
-    public void handlerDeadOrder(@Payload Order order) {
-        LOGGER.debug("[{}] queue receive message: {}", MQOrderConstants.QUEUE_ORDER_DEAD, order);
+    public void handlerDeadOrder(@Payload Order receiveOrder,
+                                 @Header(value = "amqp_receivedRoutingKey") String key) {
+        LOGGER.debug("[{}] queue receive message: key[{}], body[{}]", MQOrderConstants.QUEUE_ORDER_DEAD, key, receiveOrder);
     }
 
 }
