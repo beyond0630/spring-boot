@@ -1,7 +1,7 @@
 package com.beyond.rabbitmq.controller;
 
 import com.beyond.rabbitmq.common.MQOrderConstants;
-import com.beyond.rabbitmq.model.Order;
+import com.beyond.rabbitmq.entity.MqOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -31,7 +31,10 @@ public class SendOrderController {
      */
     @GetMapping("/order/{key}")
     public String sendDirectMessage(@PathVariable int key) {
-        amqpTemplate.convertAndSend(MQOrderConstants.EXCHANGE_ORDER, MQOrderConstants.KEY_ORDER, new Order(key));
+        MqOrder order = new MqOrder();
+        order.setId(key);
+        order.setName("order: " + key);
+        amqpTemplate.convertAndSend(MQOrderConstants.EXCHANGE_ORDER, MQOrderConstants.KEY_ORDER, order);
         LOGGER.debug("sent message to [{}] with key [{}]", MQOrderConstants.EXCHANGE_ORDER, MQOrderConstants.KEY_ORDER);
         return "success";
     }

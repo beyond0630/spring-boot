@@ -8,12 +8,23 @@ spring:
     listener:
       type: simple
       simple:
-        default-requeue-rejected: true
+        default-requeue-rejected: false
         acknowledge-mode: manual
 #        retry:
 #          enabled: true
 #          max-attempts: 5
 #          initial-interval: 5000
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/spring-boot-mq-rabbit?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: lucifer
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      min-idle: 5
+      max-active: 20
+
 
 logging:
   level:
