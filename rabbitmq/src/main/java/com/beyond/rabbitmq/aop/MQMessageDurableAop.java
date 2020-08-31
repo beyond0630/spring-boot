@@ -3,7 +3,6 @@ package com.beyond.rabbitmq.aop;
 import java.util.Objects;
 
 import com.beyond.rabbitmq.service.MQMessageService;
-import com.rabbitmq.client.Channel;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -27,7 +26,7 @@ public class MQMessageDurableAop {
 
     public MQMessageDurableAop(final MQMessageService mqMessageService) {this.mqMessageService = mqMessageService;}
 
-    @Pointcut("@annotation(org.springframework.amqp.rabbit.annotation.RabbitListener)")
+    @Pointcut("@annotation(com.beyond.rabbitmq.annotation.MQMessageDurable)")
     public void pointcut() {
 
     }
@@ -36,17 +35,18 @@ public class MQMessageDurableAop {
     public Object doLock(ProceedingJoinPoint point) throws Throwable {
         Object[] args = point.getArgs();
         Message message = getMessage(args);
-        //
-//        boolean b = mqMessageService.hasConsumedMessage(message.getMessageProperties().getMessageId());
+        String messageId = message.getMessageProperties().getMessageId();
+        boolean consumedMessage = mqMessageService.hasConsumedMessage(messageId);
+        if (consumedMessage) {
+            LOGGER.info("消息重复消费, messageId[{}]", messageId);
+            return null;
+        }
         LOGGER.debug("args: [{}]", args);
         // 执行业务
         Object result = point.proceed();
         LOGGER.debug("result: [{}]", result);
         // 保存消息到数据库
         mqMessageService.saveMessage(message);
-        Channel channel = getChannel(args);
-        long deliveryTag = message.getMessageProperties().getDeliveryTag();
-        channel.basicAck(deliveryTag, false);
         return result;
     }
 
@@ -62,19 +62,5 @@ public class MQMessageDurableAop {
             throw new RuntimeException("找不到 MQ 消息参数");
         }
         return message;
-    }
-
-    private Channel getChannel(final Object[] args) {
-        Channel channel = null;
-        for (Object arg : args) {
-            if (arg instanceof Channel) {
-                channel = (Channel) arg;
-                break;
-            }
-        }
-        if (Objects.isNull(channel)) {
-            throw new RuntimeException("找不到 Channel");
-        }
-        return channel;
     }
 }

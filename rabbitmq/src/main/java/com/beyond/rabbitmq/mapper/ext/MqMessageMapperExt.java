@@ -1,6 +1,8 @@
 package com.beyond.rabbitmq.mapper.ext;
 
+import com.beyond.rabbitmq.entity.MqMessage;
 import com.beyond.rabbitmq.mapper.MqMessageMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author lucifer
@@ -8,4 +10,5 @@ import com.beyond.rabbitmq.mapper.MqMessageMapper;
  */
 public interface MqMessageMapperExt extends MqMessageMapper {
 
+    MqMessage selectRecordByMessageId(@Param("messageId") String messageId);
 }

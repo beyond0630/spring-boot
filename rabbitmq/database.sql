@@ -2,7 +2,7 @@ CREATE DATABASE `spring-boot-mq-rabbit` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4
 
 CREATE TABLE `mq_message` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `message_id` varchar(30) NOT NULL,
+  `message_id` varchar(100) NOT NULL,
   `message_properties` text,
   `message_body` text,
   PRIMARY KEY (`id`)

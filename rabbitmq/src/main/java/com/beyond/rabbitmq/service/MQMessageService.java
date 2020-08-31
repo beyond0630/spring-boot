@@ -1,5 +1,7 @@
 package com.beyond.rabbitmq.service;
 
+import java.io.UnsupportedEncodingException;
+
 import org.springframework.amqp.core.Message;
 
 /**
@@ -10,5 +12,5 @@ public interface MQMessageService {
 
     boolean hasConsumedMessage(String messageId);
 
-    void saveMessage(Message message);
+    void saveMessage(Message message) throws UnsupportedEncodingException;
 }

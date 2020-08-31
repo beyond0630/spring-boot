@@ -1,7 +1,6 @@
 package com.beyond.rabbitmq.listener;
 
-import java.io.IOException;
-
+import com.beyond.rabbitmq.annotation.MQMessageDurable;
 import com.beyond.rabbitmq.common.MQOrderConstants;
 import com.beyond.rabbitmq.entity.MqOrder;
 import com.beyond.rabbitmq.json.JsonUtils;
@@ -11,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,23 +28,19 @@ public class MQOrderListeners {
     public MQOrderListeners(final OrderService orderService) {this.orderService = orderService;}
 
     @Transactional
+    @MQMessageDurable
     @RabbitListener(queues = MQOrderConstants.QUEUE_ORDER)
-    public void handlerOrder(Message message, Channel channel,
-                             @Header(value = "amqp_deliveryTag") long deliveryTag,
-                             @Header(value = "amqp_receivedRoutingKey") String key) throws IOException {
+    public void handlerOrder(Message message,
+                             @Header(value = AmqpHeaders.RECEIVED_ROUTING_KEY) String key) {
         MqOrder order = JsonUtils.deserialize(message.getBody(), MqOrder.class);
         LOGGER.debug("[{}] queue receive message: key[{}], body[{}]", MQOrderConstants.QUEUE_ORDER, key, order);
         orderService.saveOrder(order);
-        channel.basicAck(deliveryTag, false);
     }
 
     @RabbitListener(queues = MQOrderConstants.QUEUE_ORDER_DEAD)
     public void handlerDeadOrder(Message message, Channel channel,
-                                 @Header(value = "amqp_deliveryTag") long deliveryTag,
-                                 @Header(value = "amqp_receivedRoutingKey") String key) throws IOException {
+                                 @Header(value = "amqp_receivedRoutingKey") String key) {
         MqOrder order = JsonUtils.deserialize(message.getBody(), MqOrder.class);
         LOGGER.debug("[{}] queue receive message: key[{}], body[{}]", MQOrderConstants.QUEUE_ORDER_DEAD, key, order);
-        channel.basicAck(deliveryTag, false);
     }
-
 }

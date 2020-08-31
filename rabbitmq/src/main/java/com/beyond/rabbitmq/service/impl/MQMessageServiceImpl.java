@@ -1,7 +1,10 @@
 package com.beyond.rabbitmq.service.impl;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+
+import com.beyond.rabbitmq.entity.MqMessage;
 import com.beyond.rabbitmq.entity.MqMessageWithBLOBs;
-import com.beyond.rabbitmq.json.JsonUtils;
 import com.beyond.rabbitmq.mapper.ext.MqMessageMapperExt;
 import com.beyond.rabbitmq.service.MQMessageService;
 import org.springframework.amqp.core.Message;
@@ -20,7 +23,8 @@ public class MQMessageServiceImpl implements MQMessageService {
 
     @Override
     public boolean hasConsumedMessage(final String messageId) {
-        return false;
+        MqMessage record = mqMessageMapperExt.selectRecordByMessageId(messageId);
+        return Objects.nonNull(record);
     }
 
     @Override
@@ -28,8 +32,7 @@ public class MQMessageServiceImpl implements MQMessageService {
         MqMessageWithBLOBs record = new MqMessageWithBLOBs();
         record.setMessageId(message.getMessageProperties().getMessageId());
         record.setMessageProperties(message.getMessageProperties().toString());
-        record.setMessageBody(JsonUtils.serialize(message.getBody()));
-
+        record.setMessageBody(new String(message.getBody(), StandardCharsets.UTF_8));
         mqMessageMapperExt.insertSelective(record);
     }
 }
