@@ -6,7 +6,6 @@ public interface ZookeeperOptions {
 
     int getTimeout();
 
-
     int getRetry();
 
 }

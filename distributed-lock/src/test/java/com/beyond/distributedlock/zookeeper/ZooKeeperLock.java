@@ -1,4 +1,4 @@
-package com.beyond.distributedlock.lock;
+package com.beyond.distributedlock.zookeeper;
 
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
@@ -20,7 +20,7 @@ public class ZooKeeperLock {
 
     private static final Logger logger = LoggerFactory.getLogger(ZooKeeperLock.class);
 
-    private static CountDownLatch connectedSemaphore = new CountDownLatch(1);
+    private static final CountDownLatch connectedSemaphore = new CountDownLatch(1);
 
     private ZooKeeper zookeeper;
 
@@ -53,7 +53,7 @@ public class ZooKeeperLock {
     /**
      * 建立zk session的watcher：
      */
-    private class ZooKeeperWatcher implements Watcher {
+    private static class ZooKeeperWatcher implements Watcher {
 
         public void process(WatchedEvent event) {
             if (Event.KeeperState.SyncConnected == event.getState()) {
@@ -68,7 +68,7 @@ public class ZooKeeperLock {
      */
     private static class Singleton {
 
-        private static ZooKeeperLock instance;
+        private static final ZooKeeperLock instance;
 
         static {
             instance = new ZooKeeperLock();
@@ -83,7 +83,6 @@ public class ZooKeeperLock {
     /**
      * 获取单例：
      *
-     * @return
      */
     public static ZooKeeperLock getInstance() {
         return Singleton.getInstance();
@@ -92,7 +91,6 @@ public class ZooKeeperLock {
     /**
      * 重试获取分布式锁：
      *
-     * @param adId
      */
     public void acquireDistributedLock(int adId) {
         String path = "/sweet-lock-" + adId;
@@ -122,8 +120,6 @@ public class ZooKeeperLock {
 
     /**
      * 释放掉分布式锁：
-     *
-     * @param adId
      */
     public void releaseDistributedLock(int adId) {
         String path = "/sweet-lock-" + adId;

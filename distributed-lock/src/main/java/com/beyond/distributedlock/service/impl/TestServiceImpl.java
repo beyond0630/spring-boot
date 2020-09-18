@@ -12,11 +12,10 @@ public class TestServiceImpl implements TestService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestServiceImpl.class);
 
     @Override
-    @Lock(key = "'test'")
+    @Lock(key = "#id", timeout = 1000)
     public void testLock(int id) {
-
         try {
-            Thread.sleep(1000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

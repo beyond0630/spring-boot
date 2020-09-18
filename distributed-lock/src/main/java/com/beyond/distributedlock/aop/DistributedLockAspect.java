@@ -4,8 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 import com.beyond.distributedlock.annotation.Lock;
-import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.recipes.locks.InterProcessMutex;
+import com.beyond.distributedlock.lock.DistributedLock;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -23,24 +22,25 @@ import org.springframework.util.StringUtils;
 
 @Aspect
 @Component
-public class ZooLock {
+public class DistributedLockAspect {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ZooLock.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DistributedLockAspect.class);
 
     private static final String LOCK_PREFIX = "/distributed-lock/";
 
-    private final CuratorFramework zkClient;
+    private final DistributedLock distributedLock;
 
     /**
      * 用于SpEL表达式解析.
      */
-    private SpelExpressionParser parser = new SpelExpressionParser();
+    private final SpelExpressionParser parser = new SpelExpressionParser();
     /**
      * 用于获取方法参数定义名字.
      */
-    private DefaultParameterNameDiscoverer nameDiscoverer = new DefaultParameterNameDiscoverer();
+    private final DefaultParameterNameDiscoverer nameDiscoverer = new DefaultParameterNameDiscoverer();
 
-    public ZooLock(CuratorFramework zkClient) {this.zkClient = zkClient;}
+    public DistributedLockAspect(final DistributedLock distributedLock) {this.distributedLock = distributedLock;}
+
 
     @Pointcut("@annotation(com.beyond.distributedlock.annotation.Lock)")
     public void pointcut() {
@@ -55,20 +55,16 @@ public class ZooLock {
         if (StringUtils.isEmpty(zooLock.key())) {
             throw new IllegalArgumentException("分布式锁键不能为空");
         }
-        String lockKey = LOCK_PREFIX + generateKeyBySpEL(zooLock.key(), point);
-        InterProcessMutex lock = new InterProcessMutex(zkClient, lockKey);
-        try {
-            if (lock.acquire(zooLock.timeout(), zooLock.timeUnit())) {
-                LOGGER.debug("acquire zookeeper lock success");
-                return point.proceed();
-            } else {
-                throw new RuntimeException("请勿重复提交");
-            }
-        } finally {
-            if (lock.isAcquiredInThisProcess()) {
-                LOGGER.debug("release zookeeper lock");
-                lock.release();
-            }
+
+        String key = generateKeyBySpEL(zooLock.key(), point);
+        boolean locked = distributedLock.lock(key, zooLock.timeout());
+        if (locked) {
+            Object result = point.proceed();
+            distributedLock.releaseLock(key);
+            return result;
+        } else {
+            distributedLock.releaseLock(key);
+            throw new RuntimeException("请勿重复提交");
         }
     }
 
