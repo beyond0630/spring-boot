@@ -15,7 +15,7 @@ public class TestServiceImpl implements TestService {
     @Lock(key = "#id", timeout = 1000)
     public void testLock(int id) {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

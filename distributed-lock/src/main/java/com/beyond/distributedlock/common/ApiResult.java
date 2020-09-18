@@ -6,6 +6,8 @@ package com.beyond.distributedlock.common;
  */
 public final class ApiResult<T> {
 
+    public static final ApiResult DUPLICATE_COMMIT = ApiResult.error("请勿重复提交");
+
     public static final int CODE_OK = 0;
     public static final int CODE_ERROR = -1;
 

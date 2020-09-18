@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 import com.beyond.distributedlock.annotation.Lock;
+import com.beyond.distributedlock.common.ApiResult;
 import com.beyond.distributedlock.lock.DistributedLock;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -26,8 +27,6 @@ public class DistributedLockAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DistributedLockAspect.class);
 
-    private static final String LOCK_PREFIX = "/distributed-lock/";
-
     private final DistributedLock distributedLock;
 
     /**
@@ -39,7 +38,9 @@ public class DistributedLockAspect {
      */
     private final DefaultParameterNameDiscoverer nameDiscoverer = new DefaultParameterNameDiscoverer();
 
-    public DistributedLockAspect(final DistributedLock distributedLock) {this.distributedLock = distributedLock;}
+    public DistributedLockAspect(final DistributedLock distributedLock) {
+        this.distributedLock = distributedLock;
+    }
 
 
     @Pointcut("@annotation(com.beyond.distributedlock.annotation.Lock)")

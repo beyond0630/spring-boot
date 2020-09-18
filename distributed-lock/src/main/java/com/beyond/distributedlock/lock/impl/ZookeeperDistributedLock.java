@@ -20,14 +20,14 @@ public class ZookeeperDistributedLock implements DistributedLock {
 
     private final CuratorFramework zkClient;
 
-    private ThreadLocal<InterProcessMutex> mutexThreadLocal;
+    private final ThreadLocal<InterProcessMutex> mutexThreadLocal = ThreadLocal.withInitial(() -> null);
 
     public ZookeeperDistributedLock(final CuratorFramework zkClient) {this.zkClient = zkClient;}
 
     @Override
     public boolean lock(final String key, final long timeout) {
         InterProcessMutex mutex = new InterProcessMutex(zkClient, String.format("%s%s", LOCK_PREFIX, key));
-        mutexThreadLocal = ThreadLocal.withInitial(() -> mutex);
+        mutexThreadLocal.set(mutex);
         try {
             LOGGER.debug("try lock with key[{}], timeout[{}]", key, timeout);
             boolean acquire = mutex.acquire(timeout, TimeUnit.MILLISECONDS);
