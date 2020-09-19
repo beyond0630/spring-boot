@@ -1,6 +1,9 @@
 app:
   zookeeper:
     url: ${LINUX_HOST:127.0.0.1:2181}
+spring:
+  redis:
+    host: ${LINUX_HOST:127.0.0.1}
 
 logging:
   level:

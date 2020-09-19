@@ -1,12 +1,12 @@
 package com.beyond.distributedlock.lock.impl;
 
-import java.util.concurrent.TimeUnit;
-
 import com.beyond.distributedlock.lock.DistributedLock;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author lucifer
@@ -26,17 +26,14 @@ public class ZookeeperDistributedLock implements DistributedLock {
 
     @Override
     public boolean lock(final String key, final long timeout) {
-        InterProcessMutex mutex = new InterProcessMutex(zkClient, String.format("%s%s", LOCK_PREFIX, key));
+        String realKey = String.format("%s%s", LOCK_PREFIX, key);
+        InterProcessMutex mutex = new InterProcessMutex(zkClient, realKey);
         mutexThreadLocal.set(mutex);
         try {
-            LOGGER.debug("try lock with key[{}], timeout[{}]", key, timeout);
-            boolean acquire = mutex.acquire(timeout, TimeUnit.MILLISECONDS);
-            if (acquire) {
-                LOGGER.debug("acquire zookeeper lock success");
-            } else {
-                LOGGER.debug("acquire zookeeper lock fail");
-            }
-            return acquire;
+            LOGGER.debug("try lock with key[{}], timeout[{}]", realKey, timeout);
+            boolean success = mutex.acquire(timeout, TimeUnit.MILLISECONDS);
+            LOGGER.debug("acquire zookeeper lock {}", success ? "success" : "fail");
+            return success;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }
@@ -44,16 +41,17 @@ public class ZookeeperDistributedLock implements DistributedLock {
     }
 
     @Override
-    public void releaseLock(final String key) {
+    public boolean releaseLock(final String key) {
         InterProcessMutex mutex = mutexThreadLocal.get();
         if (mutex.isAcquiredInThisProcess()) {
-            LOGGER.debug("release zookeeper lock");
             try {
+                LOGGER.debug("released lock key[{}]", String.format("%s%s", LOCK_PREFIX, key));
                 mutex.release();
             } catch (Exception e) {
                 LOGGER.debug("release zookeeper lock fail");
             }
         }
         mutexThreadLocal.remove();
+        return true;
     }
 }

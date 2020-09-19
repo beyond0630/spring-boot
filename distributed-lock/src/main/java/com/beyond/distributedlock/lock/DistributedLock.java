@@ -8,6 +8,6 @@ public interface DistributedLock {
 
     boolean lock(String key, long timeout);
 
-    void releaseLock(String key);
+    boolean releaseLock(String key);
 
 }
