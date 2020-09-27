@@ -1,6 +1,6 @@
-package com.beyond.globalid.props;
+package com.beyond.globalid.config.props;
 
-import com.beyond.globalid.props.options.ZookeeperOptions;
+import com.beyond.globalid.config.props.options.ZookeeperOptions;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 

@@ -3,7 +3,6 @@ package com.beyond.globalid.generator.impl;
 
 import com.beyond.globalid.generator.IdGenerator;
 import org.I0Itec.zkclient.ZkClient;
-import org.springframework.stereotype.Service;
 
 /**
  * spring-boot
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
  * @author lucifer
  * @date 2019/10/21
  */
-@Service
 public class ZookeeperIdGenerator implements IdGenerator {
 
     private static final String PATH = "/global-id";
@@ -28,10 +26,10 @@ public class ZookeeperIdGenerator implements IdGenerator {
     }
 
     @Override
-    public long generate() {
+    public String generate() {
         String pathPrefix = String.format("%s/%s", PATH, NODE_NAME);
         String path = zkClient.createEphemeralSequential(pathPrefix, null);
-        return Long.valueOf(path.replace(pathPrefix, ""));
+        return path.replace(pathPrefix, "");
     }
 
 }

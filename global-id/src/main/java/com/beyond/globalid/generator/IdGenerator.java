@@ -4,6 +4,7 @@ public interface IdGenerator {
 
     /**
      * 生成唯一Id
+     * @return
      */
-    long generate();
+    String generate();
 }

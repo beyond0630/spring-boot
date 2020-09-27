@@ -1,3 +1,7 @@
 app:
   zookeeper:
-    url: 127.0.0.1:2181
+    url: 192.168.178.136:2181
+    timeout: 5000
+spring:
+  redis:
+    host: 192.168.178.136
