@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: spring-boot-rocketmq
+
+rocketmq:
+  name-server: 127.0.0.1:9876
+  producer:
+    group: ${spring.application.name}-producer
+  consumer:
+    group: ${spring.application.name}-consumer

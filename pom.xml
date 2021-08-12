@@ -32,6 +32,7 @@
         <module>security</module>
         <module>swagger</module>
         <module>zookeeper-feign</module>
+        <module>rocketmq</module>
     </modules>
 
     <dependencyManagement>
