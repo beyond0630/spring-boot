@@ -15,7 +15,7 @@ spring:
 
 ## 在 nacos 添加 nacos-config.yaml
 
-* 注: data id 取名为: ${spring.application.name}+${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+* 注: data id 取名为: ${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
 ```yaml
 config:
   env: local
